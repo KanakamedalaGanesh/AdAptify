@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campaign</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url('../static/marketing3.jpg') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            z-index: -1;
+        }
+
+        .container {
+            background-color: rgba(247, 245, 245, 0.85);
+            border-radius: 40px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 600px;
+            padding: 30px;
+            box-sizing: border-box;
+            animation: fadeIn 1s ease-in-out;
+            max-height: 85vh;
+            /* overflow-y: auto; scrollbar removed */
+        }
+
+        h1 {
+            font-size: 32px;
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            margin-top: 20px;
+            font-size: 24px;
+            color: #333;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: #0073e6;
+            outline: none;
+        }
+
+        textarea {
+            min-height: 100px;
+        }
+
+        .form-submit button {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            color: white;
+            background-color: #0073e6;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .form-submit button:hover {
+            background-color: #005bb5;
+            transform: translateY(-2px);
+        }
+
+        /* Style for service type boxes */
+        .service-type-options {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .service-type {
+            flex: 1;
+            margin: 0 10px;
+            padding: 20px;
+            background-color: #f0f0f0;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .service-type.active {
+            background-color: #0073e6;
+            color: white;
+            border-color: #005bb5;
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .form-footer a {
+            color: #0073e6;
+            text-decoration: none;
+        }
+
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+
+        nav {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .btn {
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background-color: #0073e6;
+            color: white;
+            border: 2px solid transparent;
+        }
+
+    </style>
+</head>
+<body>
+    <nav>
+        <a class="btn btn-primary" href="/">Home</a>
+    </nav>
+    <div class="container">
+        <h1>Create Your Campaign</h1>
+        <form action="#" method="POST" onsubmit="return validateForm()">
+            <div class="form-group">
+                <label for="campaign-name">Campaign Name</label>
+                <input type="text" id="campaign-name" name="campaign-name" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="service-type">Choose Service Type</label>
+                <div class="service-type-options">
+                    <div class="service-type" id="free" onclick="selectService('free')">Free</div>
+                    <div class="service-type" id="paid" onclick="selectService('paid')">Paid</div>
+                </div>
+                <!-- Hidden input to store the selected service type -->
+                <input type="hidden" id="service-type" name="service-type" value="free">
+            </div>
+
+            <div class="form-group">
+                <label for="automation-type">Choose Automation Type</label>
+                <select id="automation-type" name="automation-type" required>
+                    <option value="">Select...</option>
+                    <option value="whatsapp">WhatsApp Automation</option>
+                    <!-- <option value="email">Email Automation</option> -->
+                    <!-- <option value="sms">SMS Marketing</option>
+                    <option value="chatbot">Chatbot Integration</option>
+                    <option value="push">Push Notification</option> -->
+                </select>
+            </div>
+
+            <div class="form-submit">
+                <button type="submit">Next</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Function to toggle active service type and set hidden input
+        function selectService(service) {
+            const freeBox = document.getElementById('free');
+            const paidBox = document.getElementById('paid');
+            const serviceTypeInput = document.getElementById('service-type');
+
+            if (service === 'free') {
+                freeBox.classList.add('active');
+                paidBox.classList.remove('active');
+                serviceTypeInput.value = 'free';
+            } else if (service === 'paid') {
+                paidBox.classList.add('active');
+                freeBox.classList.remove('active');
+                serviceTypeInput.value = 'paid';
+            }
+        }
+
+        function validateForm() {
+            const campaignName = document.getElementById("campaign-name").value;
+            const description = document.getElementById("description").value;
+
+            if (!campaignName || !description) {
+                alert("Please fill in all required fields.");
+                return false;
+            }
+
+            return true;
+        }
+
+        // Initialize with 'free' as the default selected service type
+        selectService('free');
+    </script> 
+</body> 
+</html>

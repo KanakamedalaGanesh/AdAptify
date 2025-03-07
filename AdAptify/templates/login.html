@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Add Font Awesome -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url('../static/marketing3.jpg') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            position: relative;
+        }
+
+        /* Apply blur effect to background */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5); /* Dark overlay */
+            backdrop-filter: blur(8px); /* Blurred background */
+            z-index: -1; /* Ensure the overlay is behind the form */
+        }
+
+        .login-container {
+            background-color: rgba(247, 245, 245, 0.7); /* Light transparent background */
+            border-radius: 40px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            width: 89%;
+            max-width: 450px;
+            padding: 30px;
+            box-sizing: border-box;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .login-container h2 {
+            margin-top: 0;
+            font-size: 28px;
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            border-color: #0073e6;
+            outline: none;
+        }
+
+        .form-group button {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            color: white;
+            background-color: #0073e6;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .form-group button:hover {
+            background-color: #005bb5;
+            transform: translateY(-2px);
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .login-container {
+                width: 90%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 20px;
+            }
+
+            .login-container h2 {
+                font-size: 22px;
+            }
+
+            .form-group input, .form-group button {
+                font-size: 14px;
+                padding: 10px;
+            }
+        }
+        
+        .toggle-password {
+            cursor: pointer;
+            font-size: 20px; /* Increase font size for visibility */
+            position: absolute; /* Positioning */
+            right: 10px; /* Align right */
+            top: 50%; /* Center vertically */
+            transform: translateY(-50%); /* Adjust vertical alignment */
+            color: #0073e6; /* Change icon color to blue */
+            transition: color 0.3s ease; /* Smooth transition */
+        }
+
+        .toggle-password:hover {
+            color: #005bb5; /* Change color on hover */
+        }
+
+               /* Style for the nav */
+               nav {
+            position: absolute; /* Position it relative to the page */
+            top: 20px; /* Space from the top */
+            right: 20px; /* Space from the right */
+        }
+
+        /* Button base styles */
+        .btn {
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            display: inline-block;
+        }
+
+        /* Primary button styles */
+        .btn-primary {
+            background-color: #0073e6; /* Primary blue color */
+            color: white;
+            border: 2px solid transparent;
+        }
+        
+
+
+    </style>
+</head>
+<body>
+    <nav>
+        <a class="btn btn-primary" href="/">Home</a>
+    </nav>
+    <div class="login-container">
+        <h2>Login</h2>
+        <form action="{{ url_for('login') }}" method="POST">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="example@business.com" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div style="position: relative;">
+                    <input type="password" id="password" name="password" placeholder="xxxxxxxxx" required>
+                    <i class="fas fa-eye toggle-password" id="togglePassword"></i> <!-- Eye icon -->
+                </div>
+            </div>
+            <div class="form-group">
+                <button type="submit">Login</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Password visibility toggle
+        const togglePassword = document.getElementById('togglePassword');
+        const password = document.getElementById('password');
+
+        togglePassword.addEventListener('click', function () {
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            this.classList.toggle('fa-eye-slash');
+        });
+    </script>
+</body>
+</html>

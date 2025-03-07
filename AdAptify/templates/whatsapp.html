@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Scheduling</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            background: url('../static/marketing3.jpg') no-repeat center center fixed; 
+            background-size: cover;
+            margin: 0; 
+            padding: 0; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh;
+            position: relative;
+        }
+    
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(8px);
+            z-index: -1;
+        }
+    
+        .container { 
+            background-color: rgba(247, 245, 245, 0.7);
+            border-radius: 40px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 500px;
+            padding: 30px;
+            margin: 20px;
+            transition: transform 0.3s ease;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: fadeIn 1s ease-in-out;
+        }
+    
+        .container:hover {
+            transform: translateY(-5px);
+        }
+    
+        .hidden { 
+            display: none; 
+        }
+    
+        .countdown { 
+            background-color: #f9f9f9; 
+            border: 1px solid #ccc; 
+            padding: 15px; 
+            text-align: center; 
+            border-radius: 5px; 
+            margin-bottom: 20px; 
+        }
+    
+        label { 
+            font-weight: bold; 
+            margin-top: 10px; 
+            display: block; 
+            color: #333;
+        }
+    
+        input[type="text"], input[type="time"], textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+    
+        input[type="text"]:focus, input[type="time"]:focus, textarea:focus {
+            border-color: #0073e6;
+            outline: none;
+        }
+    
+        textarea {
+            resize: vertical;
+        }
+    
+        button {
+            background: #0073e6;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            transition: background 0.3s ease, transform 0.2s;
+        }
+    
+        button:hover {
+            background: #005bb5;
+            transform: translateY(-2px);
+        }
+    
+        /* Phone input styles */
+        .phone-input {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+    
+        .country-code {
+            width: 30%;
+            border-right: 1px solid #ccc;
+            padding-right: 5px;
+            margin-right: 5px;
+            text-align: center;
+        }
+    
+        .number {
+            width: 70%;
+            padding-left: 5px;
+        }
+    
+        .remove-button {
+            margin-left: 10px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+    
+        .remove-button:hover {
+            background-color: #c82333;
+        }
+    
+        /* Modal styles */
+        /* .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgba(0, 0, 0, 0.4); 
+            padding-top: 60px; 
+        }
+     */
+        /* .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; 
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; 
+            text-align: center;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+    
+        .tick-mark {
+            font-size: 50px;
+            color: green;
+        }
+     */
+        /* Custom Scrollbar */
+        .container::-webkit-scrollbar {
+            width: 15px;
+        }
+    
+        .container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 80px;
+            margin: 100px 0;
+        }
+    
+        .container::-webkit-scrollbar-thumb {
+            background: #585858;
+            border-radius: 80px;
+        }
+    
+        .container::-webkit-scrollbar-thumb:hover {
+            background: #005bb5;
+        }
+    
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                width: 90%;
+            }
+    
+            .container h2 {
+                font-size: 24px;
+            }
+        }
+    
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+    
+            .container h2 {
+                font-size: 22px;
+            }
+        }
+    
+        @media (max-width: 600px) {
+            .phone-input {
+                flex-direction: column;
+            }
+    
+            .country-code, .number {
+                width: 100%;
+                border-right: none;
+                margin: 0;
+            }
+    
+            button {
+                font-size: 18px;
+            }
+        }
+    
+        nav {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+    
+        .btn {
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            display: inline-block;
+        }
+    
+        .btn-primary {
+            background-color: #0073e6;
+            color: white;
+            border: 2px solid transparent;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+    
+        .btn-primary:hover {
+            background-color: #005bb5;
+            transform: translateY(-2px);
+        }
+    </style>
+    
+    
+    
+    
+    
+</head>
+<body>
+    <nav>
+        <a class="btn btn-primary" href="/">Home</a>
+        <a class="btn btn-primary" href="/login">Logout</a>
+    </nav>
+    <div class="container">
+        <h1>WhatsApp Message Scheduler</h1>
+        <form id="messageForm">
+            <div id="phoneInputsContainer">
+                <div class="phone-input">
+                    <input type="text" id="countryCode1" name="countryCode" class="country-code" required placeholder="+1" pattern="^\+\d{1,3}$" title="Enter country code, e.g., +1">
+                    <input type="text" id="number1" name="number" class="number" required placeholder="1234567890" pattern="^\d{10}$" title="Enter a valid phone number (10 digits)">
+                    <button type="button" class="remove-button hidden">Remove</button>
+                </div>
+            </div>
+            <button type="button" id="addPhoneButton">Add Another Contact</button>
+            <label for="message">Message:</label>
+            <textarea id="message" name="message" required></textarea>
+            <br>
+            <label for="time">Time to Send (HH:MM):</label>
+            <input type="time" id="time" name="time" required>
+            <br>
+            <button type="submit">Schedule Message</button>
+        </form>
+        
+        <div id="countdown" class="hidden countdown">
+            Message will be sent in <span id="timeLeft"></span> seconds.
+        </div>
+
+        <div id="cancelSection" class="hidden">
+            <h2>Cancel Scheduled Message</h2>
+            <p>Task ID: <span id="taskId"></span></p>
+            <button id="cancelButton">Cancel Message</button>
+            <!-- <button id="stopButton">Stop All Messages</button> -->
+        </div>
+
+        <!-- Modal for message sent confirmation -->
+        <!-- <div id="myModal" class="modal">
+            <div class="modal-content">
+                <span class="tick-mark">✔️</span>
+                <p>Message sent successfully!</p>
+                <button id="closeModal">Close</button>
+            </div>
+        </div> -->
+    </div>
+
+    <script>
+        let currentTaskId = null; // Store the current task ID
+        let phoneInputCount = 1; // Counter for phone inputs
+        let countdownInterval = null; // Variable to hold the countdown interval reference
+    
+        document.getElementById('addPhoneButton').onclick = function() {
+            phoneInputCount++;
+            const phoneInputsContainer = document.getElementById('phoneInputsContainer');
+    
+            // Create a new phone input field
+            const newPhoneInput = document.createElement('div');
+            newPhoneInput.className = 'phone-input';
+            newPhoneInput.innerHTML = `
+                <input type="text" id="countryCode${phoneInputCount}" name="countryCode" class="country-code" required placeholder="+1" pattern="^\\+\\d{1,3}$" title="Enter country code, e.g., +1">
+                <input type="text" id="number${phoneInputCount}" name="number" required placeholder="1234567890" class="number" pattern="^\\d{10}$" title="Enter a valid phone number (10 digits)">
+                <button type="button" class="remove-button">Remove</button>
+            `;
+            phoneInputsContainer.appendChild(newPhoneInput);
+    
+            // Show the remove button for the input
+            const removeButton = newPhoneInput.querySelector('.remove-button');
+            removeButton.onclick = function() {
+                phoneInputsContainer.removeChild(newPhoneInput);
+                phoneInputCount--;
+            };
+        };
+    
+        document.getElementById('messageForm').onsubmit = function(event) {
+            event.preventDefault();
+            
+            const message = document.getElementById('message').value;
+            const time = document.getElementById('time').value;
+    
+            // Gather all phone numbers
+            const phoneNumbers = [];
+            for (let i = 1; i <= phoneInputCount; i++) {
+                const countryCode = document.getElementById(`countryCode${i}`).value;
+                const number = document.getElementById(`number${i}`).value;
+                phoneNumbers.push(countryCode + number);
+            }
+    
+            const [hour, minute] = time.split(':');
+    
+            // Show countdown
+            const countdownElement = document.getElementById('countdown');
+            const timeLeftElement = document.getElementById('timeLeft');
+            countdownElement.classList.remove('hidden');
+    
+            const now = new Date();
+            const sendTime = new Date();
+            sendTime.setHours(hour, minute, 0);
+    
+            const delay = sendTime.getTime() - now.getTime();
+            if (delay < 0) {
+                alert("Please set a time in the future.");
+                return;
+            }
+    
+            let secondsLeft = Math.ceil(delay / 1000);
+            timeLeftElement.innerText = secondsLeft;
+    
+            // Clear any previous interval if it exists
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+            }
+    
+            countdownInterval = setInterval(() => {
+                secondsLeft--;
+                timeLeftElement.innerText = secondsLeft;
+                if (secondsLeft <= 0) {
+                    clearInterval(countdownInterval);
+                }
+            }, 1000);
+    
+            // Send request to schedule the message
+            fetch('/schedule', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ numbers: phoneNumbers, message, time: `${hour}:${minute}` })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.status);
+                currentTaskId = data.task_id; // Store the task ID
+                document.getElementById('taskId').innerText = currentTaskId; // Display the task ID
+                document.getElementById('cancelSection').classList.remove('hidden'); // Show the cancel section
+            })
+            .catch(error => console.error('Error:', error));
+        };
+    
+        document.getElementById('cancelButton').onclick = function() {
+            if (!currentTaskId) {
+                alert("No scheduled message to cancel.");
+                return;
+            }
+    
+            // Send cancel request
+            fetch('/cancel', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ task_id: currentTaskId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.status);
+                document.getElementById('cancelSection').classList.add('hidden'); // Hide the cancel section
+                currentTaskId = null; // Reset the current task ID
+    
+                // Stop the countdown timer
+                if (countdownInterval) {
+                    clearInterval(countdownInterval);
+                    document.getElementById('countdown').classList.add('hidden'); // Hide the countdown
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        };
+    
+        document.getElementById('stopButton').onclick = function() {
+            // Send stop request
+            fetch('/stop', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.status);
+                currentTaskId = null; // Reset the current task ID
+                document.getElementById('cancelSection').classList.add('hidden'); // Hide the cancel section
+    
+                // Stop the countdown timer
+                if (countdownInterval) {
+                    clearInterval(countdownInterval);
+                    document.getElementById('countdown').classList.add('hidden'); // Hide the countdown
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        };
+    
+        // /// Close modal when close button is clicked
+        // document.getElementById('closeModal').onclick = function() {
+        //     const modal = document.getElementById('myModal');
+        //     modal.style.display = 'none'; // Hide modal
+        // };
+    
+        // // Function to show modal after message is sent
+        // function showModal() {
+        //     const modal = document.getElementById('myModal');
+        //     modal.style.display = 'block'; // Show modal
+        // }
+    
+        // Listen for messages sent confirmation
+        const eventSource = new EventSource('/events'); // Set up EventSource to listen for events
+        eventSource.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            if (data.status === 'message_sent') {
+                alert("Message sent successfully")
+                 // Show the modal when message is sent
+            }
+        };
+    </script>
+    
+
+</body>
+</html>
