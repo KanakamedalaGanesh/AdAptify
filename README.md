@@ -65,13 +65,6 @@ Database updates verified via MySQL Workbench
 UI tested for responsiveness and error handling
 
 
-📷 Screenshots
-
-Home	Campaign	WhatsApp Scheduler
-
-		
-
-
 📈 Use Cases
 
 E-commerce platforms delivering tailored product recommendations
